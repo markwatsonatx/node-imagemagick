@@ -120,8 +120,12 @@ function parseIdentify(input) {
         prevIndent = indents[indents.length - 1];
       }
       if (comps.length < 2) {
-        props.push(prop);
-        prop = prop[currentLine.split(':')[0].trim().toLowerCase()] = {};
+        // this fixes an issue where there is an empty collection
+        // i.e. line has no value and following line is not indented
+        if (lines.length > (i+1) && lines[i+1].search(/\S/) > indent) {
+          props.push(prop);
+          prop = prop[currentLine.split(':')[0].trim().toLowerCase()] = {};
+        }
       } else {
         prop[comps[0].trim().toLowerCase()] = comps[1].trim()
       }
